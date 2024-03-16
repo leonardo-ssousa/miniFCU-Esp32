@@ -1,15 +1,20 @@
-bool screenChangeWifi(){
-  ssid = "";
-  password = "";
+void screenChangeWifi(){
+  setPassword = "";
   cursor = 0;
+  encoderIsValue = false;
   
 
   int frame = 0;
-  int ssidList = searchWifi(); 
-  int holdBTNDelay = 2000;
+  int ssidList = searchWifi();
+
+  Serial.print("Tamanho ssid: ");
+  Serial.print(setSSID);
+  Serial.print(" ");
+  Serial.println(setSSID.length());
+
 
   //Seleciona Rede
-  while(ssid.length() <= 0){
+  while(setSSID.length() <= 0){
     if(cursor > ssidList - 1){
       cursor = ssidList - 1;
     }
@@ -19,7 +24,6 @@ bool screenChangeWifi(){
     }
 
     display.clearDisplay();
-    //centerText("Selecione sua rede:", 0);
     display.setCursor(4, 0);
     display.println("Selecione");
     display.setCursor(4, 8);
@@ -34,16 +38,16 @@ bool screenChangeWifi(){
     int progress = 0;
     if(!digitalRead(BTN)){
       while(!digitalRead(BTN)){
-        //display.drawLine(0,63, progress, 63, WHITE);
         display.drawRect(109, 0, progress, 16, WHITE);
         display.drawBitmap(111, -1, icon_reset_11_16, 11, 16, BLACK);
         display.display();
         progress = progress < 16 ? progress + 1 : 16;
-        Serial.println(progress);
       }
 
-      ssid = WiFi.SSID(cursor);
-      Serial.println(ssid);
+      setSSID = WiFi.SSID(cursor);
+
+      Serial.print("Selected SSID: ");
+      Serial.println(setSSID);
     }
 
     if(progress >= 16){
@@ -57,15 +61,15 @@ bool screenChangeWifi(){
   int charSelector = 0;
   int charCounter = 0;
   char tempPassword[] = {};
-  while(password.length() <= 0 && ssid.length() > 0){
+  while(setPassword.length() <= 0 && setSSID.length() > 0){
     //Mode encoder;
     encoderIsValue = true;
-    //Configura inicio tabela ASCII
+    //Configura intervalo tabela ASCII
     if(encoderValue < 33){
-      encoderValue = 33;
+      encoderValue = 126;
     } 
     if(encoderValue > 126){
-      encoderValue = 126;
+      encoderValue = 33;
     } 
 
     display.clearDisplay();
@@ -73,7 +77,7 @@ bool screenChangeWifi(){
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Rede:");
-    display.println(ssid);    
+    display.println(setSSID);    
     display.setCursor(0,23);
     display.println("Senha:");
 
@@ -96,40 +100,37 @@ bool screenChangeWifi(){
 
     display.display();
 
-    int progress = 0;
+    int isHolding = 0;
     if(!digitalRead(BTN)){
       while(!digitalRead(BTN)){
-        display.drawRect(112, 0, progress, 15, WHITE);
-        //display.drawBitmap(111, -1, icon_reset_11_16, 11, 16, BLACK);
+        display.drawRect(112, 0, isHolding, 15, WHITE);
         display.setCursor(114, 4);
         display.setTextColor(BLACK);
         display.println("OK");
         display.display();
-        progress = progress < 15 ? progress + 1 : 15;
+        isHolding = isHolding < 15 ? isHolding + 1 : 15;
+      }
+
+      if(isHolding >= 15){
+        setPassword = String(tempPassword);
       }
 
       tempPassword[charSelector] = encoderValue;
       charSelector = charSelector + 1;
       charCounter = charCounter + 1;
-      Serial.println(tempPassword);
-      Serial.println(charCounter) ;
+      // Serial.println(tempPassword);
+      // Serial.println(charCounter) ;
     }
 
-    if(progress >= 15){
-      // ssidList = searchWifi();
-      // progress = 0;
-    }
   }
+  tryConectionWifi(); 
 
-
-
-  return false;
 }
 
 int searchWifi() {  
   long timeSearchWifi;
   int ssidList;
-  ssid = "";
+  setSSID = "";
 
   //Searching wifi UI
   display.clearDisplay();
@@ -145,4 +146,58 @@ int searchWifi() {
   Serial.println(ssidList);
   
   return ssidList;
+}
+
+void tryConectionWifi(){
+  //Dev
+  Serial.println("-----------------");
+  Serial.println("Wifi configurado:");
+  Serial.print("SSID: ");
+  Serial.print(setSSID);
+  Serial.print(" Senha: ");
+  Serial.println(setPassword);
+  Serial.println("-----------------");
+
+  //Tentando conectar UI
+  display.clearDisplay();
+  display.setTextColor(WHITE);
+  display.setCursor(16, 24);
+  display.println("Conectando");
+  display.setCursor(16, 32);
+  display.println("a rede ...");
+  display.drawBitmap(93, 23, icon_wifi_full_19_16, 19, 16, WHITE);
+  display.display();
+
+  
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(setSSID, setPassword);
+  WiFi.setAutoConnect(true);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(1000);
+  }
+
+  if(WiFi.status() == WL_CONNECTED){
+    Serial.println("");
+    Serial.println("Connectado!!");
+    isConnected = true;
+  } else {
+    Serial.println("");
+    Serial.println("Falha na conexao...");
+
+    //Falha ao conectar UI
+    display.clearDisplay();
+    display.setTextColor(WHITE);
+    display.setCursor(16, 24);
+    display.println("Falha");
+    display.setCursor(16, 32);
+    display.println("na conexao");
+    display.drawBitmap(93, 23, icon_wifi_not_connected_19_16, 19, 16, WHITE);
+    display.display();
+    isConnected = false;
+    delay(5000);
+  }
+
+
 }
