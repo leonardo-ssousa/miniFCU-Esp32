@@ -11,6 +11,7 @@ Adafruit_SSD1306 display(128, 64, &Wire, -1);
 bool isConnected = false;
 String ssid = "";
 String password = "";
+int encreaseValue = 1;
 
 //Important
 long lastMillis;
@@ -20,15 +21,31 @@ int cursor = 0;
 int CLK = 2;
 int DT = 0;
 int BTN = 16;
+bool encoderIsValue = false; // False -> Cursor | True -> value
+int encoderValue = 0;
 void IRAM_ATTR rotaryEncoderISR(){
   if(millis() - lastMillis > 70){
     if(digitalRead(DT != 0)){
-      //("<-");
-      cursor--;
+
+      switch (encoderIsValue) {
+      case false: 
+        cursor--; 
+        break;
+      case true:
+        encoderValue = encoderValue - encreaseValue;
+      }    
+
     } else {
-      //("->");
-      cursor++;
+
+      switch (encoderIsValue) {
+      case false: 
+        cursor++; 
+        break;
+      case true:
+        encoderValue = encoderValue + encreaseValue;
+      } 
     }
+    
     lastMillis = millis();
   }
 }
@@ -72,6 +89,7 @@ const unsigned char icon_volume_20_16 [] PROGMEM = {
 	0x49, 0x10, 0x80, 0x44, 0x90, 0x80, 0x44, 0x90, 0x80, 0x44, 0x90, 0x80, 0x49, 0x10, 0xf0, 0x51, 
 	0x20, 0x08, 0x42, 0x20, 0x04, 0x44, 0x40, 0x02, 0x40, 0x80, 0x01, 0xc1, 0x00, 0x00, 0x00, 0x00
 };
+const unsigned char PROGMEM icon_reset_11_16[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x19,0xe0,0x21,0xc0,0x41,0xc0,0x81,0x20,0x80,0x20,0x80,0x20,0x80,0x20,0x80,0x20,0x40,0x40,0x20,0x80,0x1f,0x00,0x00,0x00,0x00,0x00};
 const unsigned char PROGMEM icon_left_arrow_3_5 [] = {0x20,0x60,0xe0,0x60,0x20};
 const unsigned char PROGMEM icon_right_arrow_3_5 [] = {0x80,0xc0,0xe0,0xc0,0x80};
 const unsigned char PROGMEM icon_down_arrow_5_3 [] = {0xf8,0x70,0x20};
