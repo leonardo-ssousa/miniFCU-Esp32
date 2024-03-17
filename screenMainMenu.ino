@@ -1,14 +1,12 @@
-void screenMainMenu(){
+void screenMainMenu(int toCursor){
   display.clearDisplay();
   encoderIsValue = false;
-  cursor = 0;
+  cursor = toCursor;
 
-  const unsigned char* icons[] = {icon_volume_20_20, icon_speaker_device_20_20, icon_plane_20_20, icon_settings_20_20};
-  String titles[] = {"Volume Mixer", "Dispositivo de Saida", "Flight Simulator", "Configuracoes"};
-
-
-
+  const unsigned char* icons[] = {icon_volume_20_20, icon_speaker_device_20_20, icon_plane_20_20, icon_sleep_mode_20_20, icon_settings_20_20};
+  String titles[] = {"Volume Mixer", "Dispositivo de Saida", "Flight Simulator", "Sleep", "Configuracoes"};
   int sizeTitle = (sizeof(titles) / sizeof(titles[0])) - 1;
+
   while(true){
     display.clearDisplay();
 
@@ -19,26 +17,48 @@ void screenMainMenu(){
 
     cursor = cursor > sizeTitle ? cursor = 0 : cursor;
     cursor = cursor < 0 ? cursor = sizeTitle : cursor;
-    Serial.println(cursor);
 
-    //Previous icon
+    //Icone anterior
     int previousCursor = (cursor - 1) < 0 ? sizeTitle : cursor - 1;
     display.drawBitmap(5, 9, icons[previousCursor], 20, 20, WHITE);
 
-    //Current icon
+    //Icone atual
     display.drawBitmap(54, 9, icons[cursor], 20, 20, BLACK);
 
-    //Next icon
+    //Proximo icone
     int nextCursor = (cursor + 1) > sizeTitle ? 0 : cursor + 1;
     display.drawBitmap(103, 9, icons[nextCursor], 20, 20, WHITE);
 
-
-    //Print title
+    //Mostra titulo
     display.setTextColor(WHITE);
     display.setTextSize(1);
-    centerText(titles[cursor], 55);
+    centerText(titles[cursor], 53);
 
     display.display();
+
+    //Selecionado tela
+    Screens selectedScreen = Screens(cursor);
+    if(!digitalRead(BTN)){
+      switch(selectedScreen){
+        case mixer:
+        Serial.println("Go to: Volume mixer");
+        screenVolumeMixer();
+        break;
+        case outputDevice:
+        Serial.println("Go to: Disp. Saida");
+        break;
+        case flightSim:
+        Serial.println("Go to: Flight Sim");
+        break;
+        case config:
+        Serial.println("Go to: Configs");
+        break;
+        case sleep:
+        Serial.println("Go to: Sleep Mode");
+        screenSleepMode();
+        break;
+      }
+    }
   }
 
 

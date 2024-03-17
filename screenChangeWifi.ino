@@ -77,7 +77,8 @@ void screenChangeWifi(){
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Rede:");
-    display.println(setSSID);    
+    display.println(setSSID);  
+    display.drawLine(0, 17, 128, 17, WHITE);  
     display.setCursor(0,23);
     display.println("Senha:");
 
@@ -173,14 +174,15 @@ void tryConectionWifi(){
   WiFi.begin(setSSID, setPassword);
   WiFi.setAutoConnect(true);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  lastMillis = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - lastMillis < 10000) {
     Serial.print(".");
     delay(1000);
   }
 
   if(WiFi.status() == WL_CONNECTED){
     Serial.println("");
-    Serial.println("Connectado!!");
+    Serial.println("Conectado!!");
     isConnected = true;
   } else {
     Serial.println("");
