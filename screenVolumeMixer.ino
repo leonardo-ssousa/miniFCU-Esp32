@@ -25,7 +25,7 @@ void screenVolumeMixer(){
     display.setFont(&muHeavy8ptBold);
     display.setCursor(6, 39);
     display.println(tempData[cursor]);
-    display.drawBitmap(1, 27, draw_volumeSeletor_122_18, 122, 18, WHITE);
+    display.drawBitmap(1, 27, draw_volumeBorderSeletor_122_18, 122, 18, WHITE);
     display.setFont();
 
     //Proximo item
@@ -35,18 +35,22 @@ void screenVolumeMixer(){
 
     int backProgress = 0;
     if(!digitalRead(BTN)){
+
+      //Pressionado longo
       while(!digitalRead(BTN)){
         display.fillRect(0, 0, backProgress, 9, WHITE);
         display.drawBitmap(3, 2, icon_left_arrow_3_5, 3, 5, BLACK);
         display.display();
         backProgress = backProgress < 10 ? backProgress + 1 : 10;
       }
-
+      
       if(backProgress >= 10){
         Serial.println("Back to menu");
         screenMainMenu(0); 
-      }
-      
+      }      
+
+      //Presionado curto
+      screenVolumeValue(tempData[cursor]);
     }
 
     display.display();

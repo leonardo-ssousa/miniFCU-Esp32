@@ -39,6 +39,8 @@ void screenMainMenu(int toCursor){
     //Selecionado tela
     Screens selectedScreen = Screens(cursor);
     if(!digitalRead(BTN)){
+      awaitReleaseButton();
+
       switch(selectedScreen){
         case mixer:
         Serial.println("Go to: Volume mixer");
@@ -60,14 +62,6 @@ void screenMainMenu(int toCursor){
       }
     }
   }
-
-
-  //Selector
-  // display.fillCircle(69, 45, 1, WHITE);
-  // display.fillCircle(63, 45, 1, WHITE);
-  // display.fillCircle(57, 45, 1, WHITE);
-  // display.drawRect(62, 44, 3, 3, WHITE);
-
 }
 
 

@@ -7,3 +7,8 @@ int centerText(String text, int line){
   return (display.width() - textSize)/2;
 }
 
+void awaitReleaseButton(){
+  while(!digitalRead(BTN)){
+    ESP.wdtFeed(); // Reinicia o watchdog timer
+  }
+}
