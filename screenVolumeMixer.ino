@@ -34,6 +34,19 @@ void screenVolumeMixer(){
     int nextCursor = (cursor - 1) < 0 ? tempDataSize : cursor - 1;
     display.println(tempData[nextCursor]);
 
+    //Scroll Bar
+    display.setCursor(126, 12);
+    for(int i = 0; i <= 17; i++){ 
+      display.fillRect(display.getCursorX(), display.getCursorY(), 1, 1, WHITE);
+      display.setCursor(display.getCursorX(), display.getCursorY()+3);
+    }
+
+    
+    int scrollSize = 56/(tempDataSize+1);           // Area util / Quantidade de itens     
+    int scrollSPosition = 10+((cursor)*scrollSize); // Desconsidera o valor do cabeçalho
+    display.fillRoundRect(125, scrollSPosition, 3, scrollSize, 1, WHITE);  
+    
+
     int backProgress = 0;
     if(!digitalRead(BTN)){
 

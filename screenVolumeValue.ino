@@ -8,6 +8,9 @@ void screenVolumeValue(String title){
   while(true){
     display.clearDisplay();
 
+    encoderValue = encoderValue > 100 ? 100 : encoderValue;
+    encoderValue = encoderValue < 0 ? 0 : encoderValue;
+
     display.drawBitmap(0, 0, bg_screenVolumeValue, 128, 64, WHITE);
     display.fillRect(14, 22, encoderValue, 9, WHITE);
 
