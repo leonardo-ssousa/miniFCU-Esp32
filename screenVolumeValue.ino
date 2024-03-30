@@ -1,6 +1,9 @@
 void screenVolumeValue(String title){
-  encoderIsValue = true;
+  encoderIsValue = true;  
+  debounceEncoder = 100;
+  encreaseValue = 5;
   encoderValue = 75;
+  
 
   while(true){
     display.clearDisplay();

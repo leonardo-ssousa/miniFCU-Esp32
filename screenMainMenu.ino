@@ -29,6 +29,20 @@ void screenMainMenu(int toCursor){
     int nextCursor = (cursor + 1) > sizeTitle ? 0 : cursor + 1;
     display.drawBitmap(103, 9, icons[nextCursor], 20, 20, WHITE);
 
+    // ### Mostra pontos
+    int dotsSize = (sizeTitle+1)*2 + sizeTitle*4;
+    int dotsPosition = (display.width()-dotsSize)/2;
+
+    display.setCursor(dotsPosition, 44);    
+    for(int i = 0; i <= sizeTitle; i++){ 
+      int currentDot = display.getCursorX();
+      display.fillRect(currentDot, display.getCursorY(), 2, 2, WHITE);
+      display.setCursor(currentDot + 6, display.getCursorY());
+    }
+    
+    int selectorPosition = (dotsPosition-1)+(cursor*6);
+    display.fillRect(selectorPosition, display.getCursorY()-1, 4, 4, WHITE);
+
     //Mostra titulo
     display.setTextColor(WHITE);
     display.setTextSize(1);

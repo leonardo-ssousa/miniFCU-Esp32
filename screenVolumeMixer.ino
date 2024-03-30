@@ -1,6 +1,7 @@
 void screenVolumeMixer(){
   display.clearDisplay();
   encoderIsValue = false;
+  debounceEncoder = 50;
 
   String tempData[] = {"Spotify", "Chrome", "Flight Sim", "Discord"};
   int tempDataSize = sizeof(tempData) / sizeof(tempData[0]) - 1;

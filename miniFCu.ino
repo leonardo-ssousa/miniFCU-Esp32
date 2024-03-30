@@ -11,32 +11,30 @@ Adafruit_SSD1306 display(128, 64, &Wire, -1);
 //About
 String setSSID = "";
 String setPassword = "";
-int encreaseValue = 4;
+int encreaseValue = 5;
+int debounceEncoder = 50;
 bool isConnected = false;
 bool isSleeping = false;
 
 //Important
 long lastMillis;
-int cursor = 0;
-enum Screens {mixer, outputDevice, flightSim, sleep,config};
+volatile int cursor = 0;
+volatile int encoderValue = 0;
+enum Screens {mixer, outputDevice, flightSim, sleep, config};
 
 //Encoder
 int CLK = 2;
 int DT = 0;
 int BTN = 16;
 bool encoderIsValue = false; // False -> Cursor | True -> value
-int encoderValue = 0;
-void IRAM_ATTR rotaryEncoderISR(){
+
+
+void IRAM_ATTR rotaryEncoderCLK(){
   int data = digitalRead(DT);
 
-  if(millis() - lastMillis > 50){
+  if(millis() - lastMillis > debounceEncoder){
     //Sair do modo Sleep:
-    isSleeping = false;
-
-    //dev
-    Serial.print("DT: ");
-    Serial.print(data);
-    Serial.print(" CLK: 0");
+    isSleeping = false; 
 
     if(data == 1){
 
@@ -47,8 +45,6 @@ void IRAM_ATTR rotaryEncoderISR(){
       case true:
         encoderValue = encoderValue - encreaseValue;
       }    
-
-      Serial.println(" Considerado: Anti-horario");
     } else {
 
       switch (encoderIsValue) {
@@ -58,12 +54,43 @@ void IRAM_ATTR rotaryEncoderISR(){
       case true:
         encoderValue = encoderValue + encreaseValue;
       } 
-      Serial.println(" Considerado: horario");
     }
     
     lastMillis = millis();
   }
 }
+
+void IRAM_ATTR rotaryEncoderDT(){
+  int clk = digitalRead(CLK);
+
+  if(millis() - lastMillis > 50){
+    //Sair do modo Sleep:
+    isSleeping = false;
+
+    if(clk == 0){
+
+      switch (encoderIsValue) {
+      case false: 
+        cursor--; 
+        break;
+      case true:
+        encoderValue = encoderValue - encreaseValue;
+      }    
+    } else {
+
+      switch (encoderIsValue) {
+      case false: 
+        cursor++; 
+        break;
+      case true:
+        encoderValue = encoderValue + encreaseValue;
+      } 
+    }
+    
+    lastMillis = millis();
+  }
+}
+
 
 // Draws
   const unsigned char PROGMEM icon_speaker_device_20_20 [] = {0x00, 0x00, 0x00, 0x07, 0xfe, 0x00, 0x08, 0x01, 0x00, 0x08, 0xf1, 0x00, 0x09, 0x09, 0x00, 0x09,	0xf9, 0x00, 0x09, 0x09, 0x00, 0x28, 0xf1, 0x40, 0x48, 0x01, 0x20, 0x88, 0xf1, 0x10, 0x89, 0x09, 0x10, 0xaa, 0xf5, 0x50, 0x8a, 0x95, 0x10, 0x8a, 0x95, 0x10, 0x4a, 0xf5, 0x20, 0x29, 0x09, 0x40, 0x08, 0xf1, 0x00, 0x08, 0x01, 0x00, 0x0f, 0xff, 0x00, 0x00, 0x00, 0x00};
@@ -94,8 +121,9 @@ void setup() {
     for(;;); // Don't proceed, loop forever
   }  
 
-  //Configura encoder
-  attachInterrupt(digitalPinToInterrupt(CLK), rotaryEncoderISR, FALLING);
+  // Configura encoder
+  attachInterrupt(digitalPinToInterrupt(CLK), rotaryEncoderCLK, FALLING);
+  attachInterrupt(digitalPinToInterrupt(DT), rotaryEncoderDT, FALLING);
   pinMode(CLK, INPUT);
   pinMode(DT, INPUT);
   pinMode(BTN, INPUT);

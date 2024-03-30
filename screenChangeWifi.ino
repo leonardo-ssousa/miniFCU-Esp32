@@ -64,6 +64,7 @@ void screenChangeWifi(){
   while(setPassword.length() <= 0 && setSSID.length() > 0){
     //Mode encoder;
     encoderIsValue = true;
+    encreaseValue = 1;
     //Configura intervalo tabela ASCII
     if(encoderValue < 33){
       encoderValue = 126;
