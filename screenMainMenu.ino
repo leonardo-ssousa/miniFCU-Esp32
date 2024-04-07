@@ -62,6 +62,7 @@ void screenMainMenu(int toCursor){
         break;
         case outputDevice:
         Serial.println("Go to: Disp. Saida");
+        screenOutputDevice();
         break;
         case flightSim:
         Serial.println("Go to: Flight Sim");
