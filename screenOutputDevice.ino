@@ -5,14 +5,26 @@ void screenOutputDevice(){
 
   String tempData[] = {"Alto-falantes (Realtek High Definition Audio)", "1 - LG FULL HD (3- AMD High Definition Audio Device)", "Sharkoon Headset"}; //16 Caracteres
   bool tempStatus[] = {true, false, false};
-  int tempDataSize = sizeof(tempData) / sizeof(tempData[0]) - 1;
+
+  centerText("Carregando...", 28);
+  display.display();
+
+ 
+  DeserializationError error = deserializeJson(doc, httpRequest("http://192.168.1.33:8085/devices"));
+  if (error) {
+    Serial.print("deserializeJson() returned ");
+    Serial.println(error.c_str());
+    return;
+  }
+  
+  int dataSize = doc.size() - 1;
 
   while(true){
     display.clearDisplay();
     display.setTextWrap(false);
 
-    cursor = cursor > tempDataSize ? cursor = 0 : cursor;
-    cursor = cursor < 0 ? cursor = tempDataSize : cursor;
+    cursor = cursor > dataSize ? cursor = 0 : cursor;
+    cursor = cursor < 0 ? cursor = dataSize : cursor;
     
 
     //Cabeçalho
@@ -22,27 +34,27 @@ void screenOutputDevice(){
     //Item anterior
     display.drawCircle(4, 18, 4, WHITE);
     display.setCursor(12, 15);
-    int previousCursor = (cursor + 1) > tempDataSize ? 0 : cursor + 1;
-    display.println(tempData[previousCursor].substring(0,16));
-    if(tempStatus[previousCursor]){
+    int previousCursor = (cursor + 1) > dataSize ? 0 : cursor + 1;
+    display.println(String(doc[previousCursor]["name"]).substring(0,16));
+    if(doc[previousCursor]["current"]){
       display.fillCircle(4, 18, 2, WHITE);
     }
 
     //Atual item
     display.setCursor(18, 32);
-    display.println(tempData[cursor].substring(0,16));
+    display.println(String(doc[cursor]["name"]).substring(0,16));
     display.drawCircle(9, 35, 4, WHITE);
     display.drawBitmap(1, 27, draw_volumeBorderSeletor_122_18, 122, 18, WHITE);
-    if(tempStatus[cursor]){
+    if(doc[cursor]["current"]){
       display.fillCircle(9, 35, 2, WHITE);
     }
 
     //Proximo item
     display.drawCircle(4, 54, 4, WHITE);
     display.setCursor(12, 51);
-    int nextCursor = (cursor - 1) < 0 ? tempDataSize : cursor - 1;
-    display.println(tempData[nextCursor].substring(0,16));
-    if(tempStatus[nextCursor]){
+    int nextCursor = (cursor - 1) < 0 ? dataSize : cursor - 1;
+    display.println(String(doc[nextCursor]["name"]).substring(0,16));
+    if(doc[nextCursor]["current"]){
       display.fillCircle(4, 54, 2, WHITE);
     }
 
@@ -52,12 +64,12 @@ void screenOutputDevice(){
       display.fillRect(display.getCursorX(), display.getCursorY(), 1, 1, WHITE);
       display.setCursor(display.getCursorX(), display.getCursorY()+3);
     }    
-    int scrollSize = 56/(tempDataSize+1);           // Area util / Quantidade de itens     
+    int scrollSize = 56/(dataSize+1);           // Area util / Quantidade de itens     
     int scrollSPosition = 10+((cursor)*scrollSize); // Desconsidera o valor do cabeçalho
     display.fillRoundRect(125, scrollSPosition, 3, scrollSize, 1, WHITE);  
     
 
-    int backProgress = 0;
+    int backProgress = -5;
     if(!digitalRead(BTN)){
 
       //Pressionado longo
@@ -74,7 +86,8 @@ void screenOutputDevice(){
       }      
 
       //Presionado curto
-      //screenVolumeValue(tempData[cursor]);
+      httpRequest("http://192.168.1.33:8085/setdevice?deviceid=" + String(doc[cursor]["id"]));
+      error = deserializeJson(doc, httpRequest("http://192.168.1.33:8085/devices"));
     }
 
     display.display();

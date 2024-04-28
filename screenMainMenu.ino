@@ -29,7 +29,7 @@ void screenMainMenu(int toCursor){
     int nextCursor = (cursor + 1) > sizeTitle ? 0 : cursor + 1;
     display.drawBitmap(103, 9, icons[nextCursor], 20, 20, WHITE);
 
-    // ### Mostra pontos
+    // ### Mostra Cursor
     int dotsSize = (sizeTitle+1)*2 + sizeTitle*4;
     int dotsPosition = (display.width()-dotsSize)/2;
 
