@@ -32,6 +32,10 @@ int DT = 0;
 int BTN = 16;
 bool encoderIsValue = false; // False -> Cursor | True -> value
 
+//Shift Register
+int shiftRegisterDataPin = 14;
+int shiftRegisterClockPin = 12;
+int shiftRegisterSendPin = 13;
 
 void IRAM_ATTR rotaryEncoderCLK(){
   int data = digitalRead(DT);
@@ -136,7 +140,13 @@ void setup() {
   pinMode(DT, INPUT);
   pinMode(BTN, INPUT);
 
+  //Configura Shift Register
+  pinMode(shiftRegisterDataPin, OUTPUT);
+  pinMode(shiftRegisterClockPin, OUTPUT);
+  pinMode(shiftRegisterSendPin, OUTPUT);
+
   //TEMP Splash Screen
+  segmentDisplayClear();
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(1);
@@ -154,11 +164,21 @@ void setup() {
 }
 
 void loop() {
+  segmentsDisplayTest();
+  segmentDisplayClear();
+
 
   // while(!isConnected){
   //   screenChangeWifi();
   // }
+
   tryConectionWifi();
+
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11110000);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111101);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  digitalWrite(shiftRegisterSendPin, LOW);
+
   screenMainMenu(0);
   Serial.println("loop end...");
 }

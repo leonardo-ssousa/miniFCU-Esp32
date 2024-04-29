@@ -16,6 +16,7 @@ void screenSleepMode(){
   
   while(isSleeping){
     display.clearDisplay();
+    segmentDisplayClear();
     display.display();
   }
 

@@ -31,13 +31,16 @@ void screenOutputDevice(){
     centerText("Disp. de Saida", 1);
     display.drawLine(0, 9, 127, 9, WHITE);
 
+    
     //Item anterior
-    display.drawCircle(4, 18, 4, WHITE);
-    display.setCursor(12, 15);
-    int previousCursor = (cursor + 1) > dataSize ? 0 : cursor + 1;
-    display.println(String(doc[previousCursor]["name"]).substring(0,16));
-    if(doc[previousCursor]["current"]){
-      display.fillCircle(4, 18, 2, WHITE);
+    int previousCursor = (cursor + 1) > dataSize ? false : true;
+    if(previousCursor){
+      display.drawCircle(4, 18, 4, WHITE);
+      display.setCursor(12, 15);
+      display.println(String(doc[cursor + 1]["name"]).substring(0,16));
+      if(doc[cursor + 1]["current"]){
+        display.fillCircle(4, 18, 2, WHITE);
+      }
     }
 
     //Atual item
@@ -50,12 +53,14 @@ void screenOutputDevice(){
     }
 
     //Proximo item
-    display.drawCircle(4, 54, 4, WHITE);
-    display.setCursor(12, 51);
-    int nextCursor = (cursor - 1) < 0 ? dataSize : cursor - 1;
-    display.println(String(doc[nextCursor]["name"]).substring(0,16));
-    if(doc[nextCursor]["current"]){
-      display.fillCircle(4, 54, 2, WHITE);
+    int nextCursor = (cursor - 1) < 0 ? false : true;
+    if(nextCursor){
+      display.drawCircle(4, 54, 4, WHITE);
+      display.setCursor(12, 51);
+      display.println(String(doc[cursor - 1]["name"]).substring(0,16));
+      if(doc[cursor - 1]["current"]){
+        display.fillCircle(4, 54, 2, WHITE);
+      }
     }
 
     //Scroll Bar

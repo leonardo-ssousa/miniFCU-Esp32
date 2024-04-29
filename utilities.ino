@@ -39,3 +39,48 @@ String httpRequest(String link){
     }
   return payload;
 }
+
+//#######################
+//### Segment Display ###
+//#######################
+
+void segmentsDisplayTest(){
+  const int digits[] = {0b10000000, 0b01000000, 0b00100000, 0b00010000};
+  const int segments[] = {0b01111111, 0b10111111, 0b11011111, 0b11101111, 0b11110111, 0b11111011, 0b11111101, 0b11111110, 0b11111111};
+
+  //Testa cada segmento digito por digito
+  for(int j = 0; j < 4; j++){    
+    for(int i = 0; i <= 8; i++){
+    shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, digits[j]);
+    shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, segments[i]);
+    digitalWrite(shiftRegisterSendPin, HIGH);
+    digitalWrite(shiftRegisterSendPin, LOW);
+    delay(150);
+    }
+  }
+
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  digitalWrite(shiftRegisterSendPin, LOW);
+  delay(1000);
+
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  digitalWrite(shiftRegisterSendPin, LOW);
+  delay(1000);
+
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  digitalWrite(shiftRegisterSendPin, LOW);
+  delay(1000);
+}
+
+void segmentDisplayClear(){
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  digitalWrite(shiftRegisterSendPin, LOW);
+}
