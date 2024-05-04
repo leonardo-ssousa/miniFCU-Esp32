@@ -1,5 +1,6 @@
 void screenVolumeMixer(){
   display.clearDisplay();
+  segmentDisplayClear();
   encoderIsValue = false;
   debounceEncoder = 50;
 

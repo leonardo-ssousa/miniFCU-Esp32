@@ -68,6 +68,7 @@ void screenMainMenu(int toCursor){
         Serial.println("Go to: Flight Sim");
         break;
         case config:
+        segmentsDisplayTest();
         Serial.println("Go to: Configs");
         break;
         case sleep:

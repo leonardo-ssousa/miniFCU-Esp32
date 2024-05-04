@@ -1,8 +1,8 @@
 void screenVolumeValue(String title){
   encoderIsValue = true;  
   debounceEncoder = 100;
-  encreaseValue = 5;
-  encoderValue = 75;
+  encreaseValue = 1;
+  encoderValue = 50;
   
 
   while(true){
@@ -25,7 +25,14 @@ void screenVolumeValue(String title){
     display.setCursor(28, 50);
     display.print(" %");
 
-    display.display();
+    display.display();    
+    segmentDisplayShow(encoderValue, 0);
+    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+    // digitalWrite(shiftRegisterSendPin, LOW);
+    // digitalWrite(shiftRegisterSendPin, HIGH);
 
     if(!digitalRead(BTN)){
     awaitReleaseButton();

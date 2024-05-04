@@ -15,7 +15,6 @@ JsonDocument doc;
 String setSSID = "Familia-2.4G";
 String setPassword = "familia123";
 String serverLink = "";
-int encreaseValue = 5;
 int debounceEncoder = 50;
 bool isConnected = false;
 bool isSleeping = false;
@@ -30,12 +29,13 @@ enum Screens {mixer, outputDevice, flightSim, sleep, config};
 int CLK = 2;
 int DT = 0;
 int BTN = 16;
+int encreaseValue = 5;
 bool encoderIsValue = false; // False -> Cursor | True -> value
 
 //Shift Register
-int shiftRegisterDataPin = 14;
-int shiftRegisterClockPin = 12;
-int shiftRegisterSendPin = 13;
+int shiftRegisterDataPin = 14;  //D5
+int shiftRegisterClockPin = 12; //D6
+int shiftRegisterSendPin = 13;  //D7
 
 void IRAM_ATTR rotaryEncoderCLK(){
   int data = digitalRead(DT);
@@ -164,7 +164,6 @@ void setup() {
 }
 
 void loop() {
-  segmentsDisplayTest();
   segmentDisplayClear();
 
 

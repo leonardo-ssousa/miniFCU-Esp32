@@ -51,16 +51,16 @@ void segmentsDisplayTest(){
   //Testa cada segmento digito por digito
   for(int j = 0; j < 4; j++){    
     for(int i = 0; i <= 8; i++){
-    shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, digits[j]);
     shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, segments[i]);
+    shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, digits[j]);
     digitalWrite(shiftRegisterSendPin, HIGH);
     digitalWrite(shiftRegisterSendPin, LOW);
-    delay(150);
+    delay(50);
     }
   }
 
-  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
   shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
   digitalWrite(shiftRegisterSendPin, HIGH);
   digitalWrite(shiftRegisterSendPin, LOW);
   delay(1000);
@@ -71,16 +71,39 @@ void segmentsDisplayTest(){
   digitalWrite(shiftRegisterSendPin, LOW);
   delay(1000);
 
-  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
   shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
   digitalWrite(shiftRegisterSendPin, HIGH);
   digitalWrite(shiftRegisterSendPin, LOW);
   delay(1000);
 }
 
 void segmentDisplayClear(){
-  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
-  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
   digitalWrite(shiftRegisterSendPin, HIGH);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b11111111);
+  //shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
   digitalWrite(shiftRegisterSendPin, LOW);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+}
+
+void segmentDisplayShow(int numberToDisplay, int delayValue){
+
+  const int digits[] = {0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
+  const int numList[10] = {0b00000011, 0b10011111, 0b00100101, 0b00001101,  0b10011001, 0b01001001, 0b01000001, 0b00011111, 0b000000001, 0b00001001};
+  const int contCarctNumber = String(numberToDisplay).length();
+  segmentDisplayClear();
+
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  for(int i = contCarctNumber; i >= 0; i--){
+    int digitToDisplay = String(numberToDisplay).substring(i, i + 1).toInt();
+
+    shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, numList[digitToDisplay]);
+    //shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, digits[i]);
+  }
+  digitalWrite(shiftRegisterSendPin, LOW);
+  digitalWrite(shiftRegisterSendPin, HIGH);
+  //delay(delayValue);
 }
