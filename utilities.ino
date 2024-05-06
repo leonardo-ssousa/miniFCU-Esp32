@@ -47,6 +47,10 @@ String httpRequest(String link){
 void segmentsDisplayTest(){
   const int segments[] = {0b01111111, 0b10111111, 0b11011111, 0b11101111, 0b11110111, 0b11111011, 0b11111101, 0b11111110, 0b11111111};
   segmentDisplayClear();
+  display.clearDisplay();
+
+  centerText("Testando...", 28);
+  display.display();
 
   // //Testa cada segmento digito por digito
   // for(int j = 0; j < 4; j++){    
@@ -128,7 +132,7 @@ void segmentDisplayHour(){
 
 }
 
-void segmentDisplayShow(int numberToDisplay, int delayValue){
+void segmentDisplayShow(int numberToDisplay){
 
   const int digits[] = {0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
   const int numList[10] = {0b00000011, 0b10011111, 0b00100101, 0b00001101,  0b10011001, 0b01001001, 0b01000001, 0b00011111, 0b000000001, 0b00001001};

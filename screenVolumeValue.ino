@@ -21,18 +21,11 @@ void screenVolumeValue(String title){
 
     display.setCursor(13, 50);
     display.print(encoderValue);
-
     display.setCursor(28, 50);
     display.print(" %");
-    
+
     display.display();    
-    segmentDisplayShow(encoderValue, 0);
-    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
-    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
-    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
-    // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);
-    // digitalWrite(shiftRegisterSendPin, LOW);
-    // digitalWrite(shiftRegisterSendPin, HIGH);
+    segmentDisplayShow(encoderValue);
 
     if(!digitalRead(BTN)){
     awaitReleaseButton();

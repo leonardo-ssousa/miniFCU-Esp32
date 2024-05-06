@@ -95,6 +95,11 @@ void screenOutputDevice(){
       error = deserializeJson(doc, httpRequest("http://192.168.1.33:8085/devices"));
     }
 
+    if(millis() - lastMillisTime > 1000*30 || lastMillisTime == 0){
+      lastMillisTime = millis();
+      segmentDisplayHour();      
+    }
+
     display.display();
   }
 } 

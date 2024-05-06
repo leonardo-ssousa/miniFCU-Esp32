@@ -7,7 +7,7 @@ void screenMainMenu(int toCursor){
   lastMillisTime = 0;
 
   const unsigned char* icons[] = {icon_volume_20_20, icon_speaker_device_20_20, icon_plane_20_20, icon_sleep_mode_20_20, icon_settings_20_20};
-  String titles[] = {"Volume Mixer", "Dispositivo de Saida", "Flight Simulator", "Sleep", "Configuracoes"};
+  String titles[] = {"Volume Mixer", "Dispositivo de Saida", "Flight Simulator", "Dormir", "Configuracoes"};
   int sizeTitle = (sizeof(titles) / sizeof(titles[0])) - 1;
 
   while(true){
