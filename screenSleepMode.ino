@@ -20,4 +20,6 @@ void screenSleepMode(){
     display.display();
   }
 
+  segmentDisplayHour();
+
 }

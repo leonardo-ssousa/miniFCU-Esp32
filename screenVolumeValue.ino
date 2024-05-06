@@ -1,7 +1,7 @@
 void screenVolumeValue(String title){
   encoderIsValue = true;  
   debounceEncoder = 100;
-  encreaseValue = 1;
+  encreaseValue = 5;
   encoderValue = 50;
   
 
@@ -24,7 +24,7 @@ void screenVolumeValue(String title){
 
     display.setCursor(28, 50);
     display.print(" %");
-
+    
     display.display();    
     segmentDisplayShow(encoderValue, 0);
     // shiftOut(shiftRegisterDataPin, shiftRegisterClockPin, LSBFIRST, 0b00000000);

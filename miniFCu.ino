@@ -18,17 +18,20 @@ String serverLink = "";
 int debounceEncoder = 50;
 bool isConnected = false;
 bool isSleeping = false;
+String currentHour = "";
+String currentMinute = "";
 
 //Important
 long lastMillis;
+long lastMillisTime;
 volatile int cursor = 0;
 volatile int encoderValue = 0;
 enum Screens {mixer, outputDevice, flightSim, sleep, config};
 
 //Encoder
-int CLK = 2;
-int DT = 0;
-int BTN = 16;
+int CLK = 2;  //D4
+int DT = 0;   //D3
+int BTN = 16; //D0
 int encreaseValue = 5;
 bool encoderIsValue = false; // False -> Cursor | True -> value
 
@@ -36,6 +39,7 @@ bool encoderIsValue = false; // False -> Cursor | True -> value
 int shiftRegisterDataPin = 14;  //D5
 int shiftRegisterClockPin = 12; //D6
 int shiftRegisterSendPin = 13;  //D7
+const int quantDigits = 5;
 
 void IRAM_ATTR rotaryEncoderCLK(){
   int data = digitalRead(DT);
@@ -144,6 +148,7 @@ void setup() {
   pinMode(shiftRegisterDataPin, OUTPUT);
   pinMode(shiftRegisterClockPin, OUTPUT);
   pinMode(shiftRegisterSendPin, OUTPUT);
+  segmentDisplayClear();
 
   //TEMP Splash Screen
   segmentDisplayClear();
